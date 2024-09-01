@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href=# >Search</a></li> 
+            <!--  url 'search'  -->
+            <li><a href="{% url 'post_hand' %}">Post Hand History</a></li> 
+            <!--  url 'post_hand' -->
+            <li><a href=#>Personal Information</a></li>
+            <!--  url 'profile'  -->
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content: Threads-like Posts Display -->
+    <div id="poker_hands">
+        {% for hand in poker_hands %}
+            <div class="poker-hand">
+                <h2>Position: {{ hand.position }}</h2>
+                <p>Stack Size: {{ hand.stack_size }}</p>
+                <p>Hand History: {{ hand.hand_history }}</p>
+                <p>Posted by: {{ hand.user.username }} on {{ hand.created_at }}</p>
+                
+                <!-- Delete button, only visible to the owner of the post -->
+                {% if hand.user == request.user %}
+                    <form method="POST" action="{% url 'delete_hand' hand.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Delete</button>
+                    </form>
+                {% endif %}
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
+    
+</body>
+</html>
